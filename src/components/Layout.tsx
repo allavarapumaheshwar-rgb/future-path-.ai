@@ -18,7 +18,20 @@ const nav = [
 
 export function Layout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setUser(s?.user ?? null));
+    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    navigate({ to: "/" });
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -46,9 +59,27 @@ export function Layout({ children }: { children: ReactNode }) {
             })}
           </nav>
 
-          <Link to="/quiz" className="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-semibold shadow-soft hover-lift">
-            Take Quiz
-          </Link>
+          <div className="hidden lg:flex items-center gap-2">
+            {user ? (
+              <>
+                <Link to="/dashboard" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-primary hover:bg-primary/5">
+                  <LayoutDashboard className="h-4 w-4" /> Dashboard
+                </Link>
+                <button onClick={signOut} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-foreground/70 hover:text-destructive hover:bg-destructive/5">
+                  <LogOut className="h-4 w-4" /> Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/auth" search={{ mode: "login" }} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-primary">
+                  <LogIn className="h-4 w-4" /> Login
+                </Link>
+                <Link to="/mentor" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-semibold shadow-soft hover-lift">
+                  <MessageCircle className="h-4 w-4" /> Ask AI Mentor
+                </Link>
+              </>
+            )}
+          </div>
 
           <button className="lg:hidden p-2 rounded-lg hover:bg-muted" onClick={() => setOpen(!open)} aria-label="Menu">
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
