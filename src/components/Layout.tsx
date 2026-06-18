@@ -95,6 +95,19 @@ export function Layout({ children }: { children: ReactNode }) {
                   {n.label}
                 </Link>
               ))}
+              <div className="border-t border-border mt-2 pt-2 flex flex-col gap-1">
+                {user ? (
+                  <>
+                    <Link to="/dashboard" onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-primary/5 hover:text-primary inline-flex items-center gap-2"><LayoutDashboard className="h-4 w-4" /> Dashboard</Link>
+                    <button onClick={() => { setOpen(false); signOut(); }} className="px-3 py-2.5 rounded-lg text-sm font-medium text-left hover:bg-destructive/5 hover:text-destructive inline-flex items-center gap-2"><LogOut className="h-4 w-4" /> Sign out</button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/auth" search={{ mode: "login" }} onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-primary/5 hover:text-primary inline-flex items-center gap-2"><LogIn className="h-4 w-4" /> Login</Link>
+                    <Link to="/auth" search={{ mode: "signup" }} onClick={() => setOpen(false)} className="px-3 py-2.5 rounded-lg text-sm font-semibold gradient-primary text-primary-foreground text-center">Sign up</Link>
+                  </>
+                )}
+              </div>
             </nav>
           </div>
         )}
