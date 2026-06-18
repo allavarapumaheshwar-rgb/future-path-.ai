@@ -9,38 +9,226 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
+import { Route as StreamsRouteImport } from './routes/streams'
+import { Route as SkillsRouteImport } from './routes/skills'
+import { Route as ScholarshipsRouteImport } from './routes/scholarships'
+import { Route as QuizRouteImport } from './routes/quiz'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CollegesRouteImport } from './routes/colleges'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StreamsSlugRouteImport } from './routes/streams.$slug'
+import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 
+const SuccessStoriesRoute = SuccessStoriesRouteImport.update({
+  id: '/success-stories',
+  path: '/success-stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StreamsRoute = StreamsRouteImport.update({
+  id: '/streams',
+  path: '/streams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SkillsRoute = SkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScholarshipsRoute = ScholarshipsRouteImport.update({
+  id: '/scholarships',
+  path: '/scholarships',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizRoute = QuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollegesRoute = CollegesRouteImport.update({
+  id: '/colleges',
+  path: '/colleges',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StreamsSlugRoute = StreamsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => StreamsRoute,
+} as any)
+const CareersSlugRoute = CareersSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CareersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/careers': typeof CareersRouteWithChildren
+  '/colleges': typeof CollegesRoute
+  '/contact': typeof ContactRoute
+  '/quiz': typeof QuizRoute
+  '/scholarships': typeof ScholarshipsRoute
+  '/skills': typeof SkillsRoute
+  '/streams': typeof StreamsRouteWithChildren
+  '/success-stories': typeof SuccessStoriesRoute
+  '/careers/$slug': typeof CareersSlugRoute
+  '/streams/$slug': typeof StreamsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/careers': typeof CareersRouteWithChildren
+  '/colleges': typeof CollegesRoute
+  '/contact': typeof ContactRoute
+  '/quiz': typeof QuizRoute
+  '/scholarships': typeof ScholarshipsRoute
+  '/skills': typeof SkillsRoute
+  '/streams': typeof StreamsRouteWithChildren
+  '/success-stories': typeof SuccessStoriesRoute
+  '/careers/$slug': typeof CareersSlugRoute
+  '/streams/$slug': typeof StreamsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/careers': typeof CareersRouteWithChildren
+  '/colleges': typeof CollegesRoute
+  '/contact': typeof ContactRoute
+  '/quiz': typeof QuizRoute
+  '/scholarships': typeof ScholarshipsRoute
+  '/skills': typeof SkillsRoute
+  '/streams': typeof StreamsRouteWithChildren
+  '/success-stories': typeof SuccessStoriesRoute
+  '/careers/$slug': typeof CareersSlugRoute
+  '/streams/$slug': typeof StreamsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/careers'
+    | '/colleges'
+    | '/contact'
+    | '/quiz'
+    | '/scholarships'
+    | '/skills'
+    | '/streams'
+    | '/success-stories'
+    | '/careers/$slug'
+    | '/streams/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/careers'
+    | '/colleges'
+    | '/contact'
+    | '/quiz'
+    | '/scholarships'
+    | '/skills'
+    | '/streams'
+    | '/success-stories'
+    | '/careers/$slug'
+    | '/streams/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/careers'
+    | '/colleges'
+    | '/contact'
+    | '/quiz'
+    | '/scholarships'
+    | '/skills'
+    | '/streams'
+    | '/success-stories'
+    | '/careers/$slug'
+    | '/streams/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CareersRoute: typeof CareersRouteWithChildren
+  CollegesRoute: typeof CollegesRoute
+  ContactRoute: typeof ContactRoute
+  QuizRoute: typeof QuizRoute
+  ScholarshipsRoute: typeof ScholarshipsRoute
+  SkillsRoute: typeof SkillsRoute
+  StreamsRoute: typeof StreamsRouteWithChildren
+  SuccessStoriesRoute: typeof SuccessStoriesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/success-stories': {
+      id: '/success-stories'
+      path: '/success-stories'
+      fullPath: '/success-stories'
+      preLoaderRoute: typeof SuccessStoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/streams': {
+      id: '/streams'
+      path: '/streams'
+      fullPath: '/streams'
+      preLoaderRoute: typeof StreamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/skills': {
+      id: '/skills'
+      path: '/skills'
+      fullPath: '/skills'
+      preLoaderRoute: typeof SkillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scholarships': {
+      id: '/scholarships'
+      path: '/scholarships'
+      fullPath: '/scholarships'
+      preLoaderRoute: typeof ScholarshipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz': {
+      id: '/quiz'
+      path: '/quiz'
+      fullPath: '/quiz'
+      preLoaderRoute: typeof QuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/colleges': {
+      id: '/colleges'
+      path: '/colleges'
+      fullPath: '/colleges'
+      preLoaderRoute: typeof CollegesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +236,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/streams/$slug': {
+      id: '/streams/$slug'
+      path: '/$slug'
+      fullPath: '/streams/$slug'
+      preLoaderRoute: typeof StreamsSlugRouteImport
+      parentRoute: typeof StreamsRoute
+    }
+    '/careers/$slug': {
+      id: '/careers/$slug'
+      path: '/$slug'
+      fullPath: '/careers/$slug'
+      preLoaderRoute: typeof CareersSlugRouteImport
+      parentRoute: typeof CareersRoute
+    }
   }
 }
 
+interface CareersRouteChildren {
+  CareersSlugRoute: typeof CareersSlugRoute
+}
+
+const CareersRouteChildren: CareersRouteChildren = {
+  CareersSlugRoute: CareersSlugRoute,
+}
+
+const CareersRouteWithChildren =
+  CareersRoute._addFileChildren(CareersRouteChildren)
+
+interface StreamsRouteChildren {
+  StreamsSlugRoute: typeof StreamsSlugRoute
+}
+
+const StreamsRouteChildren: StreamsRouteChildren = {
+  StreamsSlugRoute: StreamsSlugRoute,
+}
+
+const StreamsRouteWithChildren =
+  StreamsRoute._addFileChildren(StreamsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CareersRoute: CareersRouteWithChildren,
+  CollegesRoute: CollegesRoute,
+  ContactRoute: ContactRoute,
+  QuizRoute: QuizRoute,
+  ScholarshipsRoute: ScholarshipsRoute,
+  SkillsRoute: SkillsRoute,
+  StreamsRoute: StreamsRouteWithChildren,
+  SuccessStoriesRoute: SuccessStoriesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
