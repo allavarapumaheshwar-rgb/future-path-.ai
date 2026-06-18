@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { Sparkles, Eye, EyeOff, Loader2 } from "lucide-react";
@@ -100,7 +100,6 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
     </label>
   );
 }
-type ReactNode = import("react").ReactNode;
 
 const inputCls =
   "w-full px-3.5 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition";
