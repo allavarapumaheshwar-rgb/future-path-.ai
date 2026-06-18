@@ -14,16 +14,198 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      notifications: {
+        Row: {
+          body: string | null
+          category: string
+          created_at: string
+          id: string
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          grade: string | null
+          id: string
+          interests: string[] | null
+          mobile: string | null
+          stream: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          grade?: string | null
+          id: string
+          interests?: string[] | null
+          mobile?: string | null
+          stream?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          grade?: string | null
+          id?: string
+          interests?: string[] | null
+          mobile?: string | null
+          stream?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      saved_careers: {
+        Row: {
+          career_slug: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          career_slug: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          career_slug?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_colleges: {
+        Row: {
+          college_name: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          college_name: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          college_name?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_scholarships: {
+        Row: {
+          created_at: string
+          deadline: string | null
+          id: string
+          scholarship_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string | null
+          id?: string
+          scholarship_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deadline?: string | null
+          id?: string
+          scholarship_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      skill_progress: {
+        Row: {
+          id: string
+          progress: number
+          skill_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          progress?: number
+          skill_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          progress?: number
+          skill_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "student" | "parent" | "teacher" | "counselor" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +332,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["student", "parent", "teacher", "counselor", "admin"],
+    },
   },
 } as const
