@@ -269,7 +269,7 @@ function Dashboard() {
                 {skillsList.slice(0, 5).map((s) => (
                   <li key={s.name} className="flex items-start gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary" />
-                    <span>{s.name} <span className="text-muted-foreground text-xs">— {s.category}</span></span>
+                    <span>{s.name} <span className="text-muted-foreground text-xs">— {s.level}</span></span>
                   </li>
                 ))}
               </ul>
