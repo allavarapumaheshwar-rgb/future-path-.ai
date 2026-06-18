@@ -1,16 +1,18 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, X, Sparkles, Mail, Github, Twitter, Linkedin } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Menu, X, Sparkles, Mail, Github, Twitter, Linkedin, LogIn, LayoutDashboard, LogOut, MessageCircle } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 const nav = [
   { to: "/", label: "Home" },
   { to: "/streams", label: "Streams" },
   { to: "/careers", label: "Careers" },
-  { to: "/quiz", label: "Career Quiz" },
-  { to: "/colleges", label: "College Finder" },
+  { to: "/mentor", label: "AI Mentor" },
+  { to: "/quiz", label: "Quiz" },
+  { to: "/colleges", label: "Colleges" },
   { to: "/scholarships", label: "Scholarships" },
   { to: "/skills", label: "Skills" },
-  { to: "/success-stories", label: "Success Stories" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
