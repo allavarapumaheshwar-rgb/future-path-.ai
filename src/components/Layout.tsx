@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Menu, X, Sparkles, Mail, Github, Twitter, Linkedin, LogIn, LayoutDashboard, LogOut, MessageCircle } from "lucide-react";
+import { Menu, X, Sparkles, Mail, Phone, Github, Twitter, Linkedin, LogIn, LayoutDashboard, LogOut, MessageCircle } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
