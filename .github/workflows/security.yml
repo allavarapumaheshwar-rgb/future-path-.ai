@@ -1,0 +1,101 @@
+name: Security Checks
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+  schedule:
+    # Weekly re-scan to catch newly disclosed advisories
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  dependency-audit:
+    name: Dependency vulnerability audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      # Fails the job if any high/critical advisory is present.
+      - name: Run bun audit (high & critical)
+        run: bun audit --prod --audit-level=high
+
+  secret-scan:
+    name: Secret scanning (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  codeql:
+    name: CodeQL static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-and-quality
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"
+
+  supabase-lint:
+    name: Supabase migrations security lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Guards against the most common regressions caught by our previous
+      # security scans: tables created in `public` without RLS enabled,
+      # without GRANTs, or SECURITY DEFINER functions exposed to `authenticated`.
+      - name: Lint Supabase migrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          FAILED=0
+          for f in supabase/migrations/*.sql; do
+            echo "▶ Checking $f"
+            # Every CREATE TABLE public.* must be followed by ENABLE ROW LEVEL SECURITY
+            if grep -Eqi 'create[[:space:]]+table[[:space:]]+(if[[:space:]]+not[[:space:]]+exists[[:space:]]+)?public\.' "$f"; then
+              if ! grep -Eqi 'enable[[:space:]]+row[[:space:]]+level[[:space:]]+security' "$f"; then
+                echo "::error file=$f::CREATE TABLE in public schema without ENABLE ROW LEVEL SECURITY"
+                FAILED=1
+              fi
+              if ! grep -Eqi '^[[:space:]]*grant[[:space:]]' "$f"; then
+                echo "::error file=$f::CREATE TABLE in public schema without explicit GRANT statements"
+                FAILED=1
+              fi
+            fi
+            # SECURITY DEFINER functions should not be EXECUTE-able by `authenticated`
+            if grep -Eqi 'security[[:space:]]+definer' "$f"; then
+              if grep -Eqi 'grant[[:space:]]+execute[[:space:]]+on[[:space:]]+function[[:space:]]+[^;]*to[[:space:]]+authenticated' "$f"; then
+                echo "::error file=$f::SECURITY DEFINER function granted EXECUTE to 'authenticated' (privilege escalation risk)"
+                FAILED=1
+              fi
+            fi
+          done
+          exit $FAILED
