@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Menu, X, Sparkles, Mail, Github, Twitter, Linkedin, LogIn, LayoutDashboard, LogOut, MessageCircle } from "lucide-react";
+import { Menu, X, Sparkles, Mail, Phone, Github, Twitter, Linkedin, LogIn, LayoutDashboard, LogOut, MessageCircle } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
@@ -115,40 +115,51 @@ export function Layout({ children }: { children: ReactNode }) {
 
       <main className="flex-1">{children}</main>
 
-      <footer className="mt-20 border-t border-border bg-card/50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 grid gap-10 md:grid-cols-4">
-          <div className="md:col-span-2">
+      <footer className="mt-16 sm:mt-20 border-t border-border bg-card/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 sm:py-12 grid gap-8 sm:gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="sm:col-span-2">
             <div className="flex items-center gap-2 mb-3">
               <div className="grid h-9 w-9 place-items-center rounded-xl gradient-primary"><Sparkles className="h-5 w-5 text-primary-foreground" /></div>
               <span className="font-display text-lg font-bold">FuturePath <span className="gradient-text">AI</span></span>
             </div>
             <p className="text-sm text-muted-foreground max-w-md">India's AI-powered career guidance ecosystem helping students from Class 10 onwards discover streams, careers, colleges and skills for a future-ready life.</p>
-            <div className="flex gap-3 mt-4">
+            <div className="mt-5 space-y-1.5 text-sm">
+              <div><span className="text-muted-foreground">Founder: </span><span className="font-semibold">Sharanya Allavarapu</span></div>
+              <div className="break-all"><span className="text-muted-foreground">Email: </span><a href="mailto:allavarapulakshmisharanya33@gmail.com" className="hover:text-primary">allavarapulakshmisharanya33@gmail.com</a></div>
+              <div><span className="text-muted-foreground">Phone: </span><a href="tel:+917095879590" className="hover:text-primary">+91 7095879590</a></div>
+            </div>
+            <div className="flex gap-3 mt-5">
               {[Twitter, Linkedin, Github, Mail].map((Icon, i) => (
-                <a key={i} href="#" className="grid h-9 w-9 place-items-center rounded-lg border border-border hover:border-primary hover:text-primary transition-colors"><Icon className="h-4 w-4" /></a>
+                <a key={i} href="#" aria-label="social" className="grid h-10 w-10 place-items-center rounded-lg border border-border hover:border-primary hover:text-primary transition-colors"><Icon className="h-4 w-4" /></a>
               ))}
             </div>
           </div>
           <div>
-            <h4 className="font-semibold mb-3 text-sm">Explore</h4>
+            <h4 className="font-semibold mb-3 text-sm">Quick Links</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/streams" className="hover:text-primary">Streams</Link></li>
               <li><Link to="/careers" className="hover:text-primary">Careers</Link></li>
               <li><Link to="/colleges" className="hover:text-primary">Colleges</Link></li>
               <li><Link to="/scholarships" className="hover:text-primary">Scholarships</Link></li>
+              <li><Link to="/quiz" className="hover:text-primary">Career Quiz</Link></li>
+              <li><Link to="/skills" className="hover:text-primary">Skills</Link></li>
+              <li><Link to="/mentor" className="hover:text-primary">AI Mentor</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-3 text-sm">Grow</h4>
+            <h4 className="font-semibold mb-3 text-sm">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/quiz" className="hover:text-primary">Career Quiz</Link></li>
-              <li><Link to="/skills" className="hover:text-primary">Skills</Link></li>
+              <li className="flex items-start gap-2"><Mail className="h-4 w-4 mt-0.5 shrink-0 text-primary" /><a href="mailto:allavarapulakshmisharanya33@gmail.com" className="hover:text-primary break-all">allavarapulakshmisharanya33@gmail.com</a></li>
+              <li className="flex items-start gap-2"><Phone className="h-4 w-4 mt-0.5 shrink-0 text-primary" /><a href="tel:+917095879590" className="hover:text-primary">+91 7095879590</a></li>
+              <li><Link to="/contact" className="hover:text-primary">Contact Page →</Link></li>
               <li><Link to="/success-stories" className="hover:text-primary">Success Stories</Link></li>
-              <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-border py-6 text-center text-xs text-muted-foreground">© {new Date().getFullYear()} FuturePath AI · Built for students, by educators.</div>
+        <div className="border-t border-border py-5 sm:py-6 px-4 text-center text-xs text-muted-foreground space-y-1">
+          <div>© 2026 FuturePath AI. All Rights Reserved.</div>
+          <div>Designed and Managed by <span className="text-foreground font-medium">Sharanya Allavarapu</span>.</div>
+        </div>
       </footer>
     </div>
   );
