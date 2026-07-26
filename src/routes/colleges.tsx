@@ -102,16 +102,17 @@ function CollegesPage() {
   }, [user]);
 
   const updateSearch = (patch: Partial<z.infer<typeof searchSchema>>) => {
-    navigate({ search: (prev) => ({ ...prev, ...patch, page: 1 }), replace: true });
+    navigate({ search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, ...patch, page: 1 }), replace: true });
   };
 
   const clearFilters = () => {
     navigate({
-      search: {
+      search: (prev: z.infer<typeof searchSchema>) => ({
+        ...prev,
         q: "", state: "", district: "", city: "", type: "", category: "",
         course: "", exam: "", minFee: 0, maxFee: 5000000, hostel: "false",
-        sort: "ranking", view: search.view, page: 1,
-      },
+        sort: "ranking", page: 1,
+      }),
       replace: true,
     });
   };
