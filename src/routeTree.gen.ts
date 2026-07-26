@@ -23,6 +23,8 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StreamsSlugRouteImport } from './routes/streams.$slug'
+import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
+import { Route as CollegesSlugRouteImport } from './routes/colleges.$slug'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -96,6 +98,16 @@ const StreamsSlugRoute = StreamsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => StreamsRoute,
 } as any)
+const ScholarshipsSlugRoute = ScholarshipsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ScholarshipsRoute,
+} as any)
+const CollegesSlugRoute = CollegesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CollegesRoute,
+} as any)
 const CareersSlugRoute = CareersSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -116,36 +128,40 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRouteWithChildren
-  '/colleges': typeof CollegesRoute
+  '/colleges': typeof CollegesRouteWithChildren
   '/contact': typeof ContactRoute
   '/mentor': typeof MentorRoute
   '/quiz': typeof QuizRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/scholarships': typeof ScholarshipsRoute
+  '/scholarships': typeof ScholarshipsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/api/chat': typeof ApiChatRoute
   '/careers/$slug': typeof CareersSlugRoute
+  '/colleges/$slug': typeof CollegesSlugRoute
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/streams/$slug': typeof StreamsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRouteWithChildren
-  '/colleges': typeof CollegesRoute
+  '/colleges': typeof CollegesRouteWithChildren
   '/contact': typeof ContactRoute
   '/mentor': typeof MentorRoute
   '/quiz': typeof QuizRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/scholarships': typeof ScholarshipsRoute
+  '/scholarships': typeof ScholarshipsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/api/chat': typeof ApiChatRoute
   '/careers/$slug': typeof CareersSlugRoute
+  '/colleges/$slug': typeof CollegesSlugRoute
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/streams/$slug': typeof StreamsSlugRoute
 }
 export interface FileRoutesById {
@@ -154,18 +170,20 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/careers': typeof CareersRouteWithChildren
-  '/colleges': typeof CollegesRoute
+  '/colleges': typeof CollegesRouteWithChildren
   '/contact': typeof ContactRoute
   '/mentor': typeof MentorRoute
   '/quiz': typeof QuizRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/scholarships': typeof ScholarshipsRoute
+  '/scholarships': typeof ScholarshipsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/api/chat': typeof ApiChatRoute
   '/careers/$slug': typeof CareersSlugRoute
+  '/colleges/$slug': typeof CollegesSlugRoute
+  '/scholarships/$slug': typeof ScholarshipsSlugRoute
   '/streams/$slug': typeof StreamsSlugRoute
 }
 export interface FileRouteTypes {
@@ -186,6 +204,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/api/chat'
     | '/careers/$slug'
+    | '/colleges/$slug'
+    | '/scholarships/$slug'
     | '/streams/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -204,6 +224,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/api/chat'
     | '/careers/$slug'
+    | '/colleges/$slug'
+    | '/scholarships/$slug'
     | '/streams/$slug'
   id:
     | '__root__'
@@ -223,6 +245,8 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/api/chat'
     | '/careers/$slug'
+    | '/colleges/$slug'
+    | '/scholarships/$slug'
     | '/streams/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -231,12 +255,12 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CareersRoute: typeof CareersRouteWithChildren
-  CollegesRoute: typeof CollegesRoute
+  CollegesRoute: typeof CollegesRouteWithChildren
   ContactRoute: typeof ContactRoute
   MentorRoute: typeof MentorRoute
   QuizRoute: typeof QuizRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  ScholarshipsRoute: typeof ScholarshipsRoute
+  ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
   StreamsRoute: typeof StreamsRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRoute
@@ -343,6 +367,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StreamsSlugRouteImport
       parentRoute: typeof StreamsRoute
     }
+    '/scholarships/$slug': {
+      id: '/scholarships/$slug'
+      path: '/$slug'
+      fullPath: '/scholarships/$slug'
+      preLoaderRoute: typeof ScholarshipsSlugRouteImport
+      parentRoute: typeof ScholarshipsRoute
+    }
+    '/colleges/$slug': {
+      id: '/colleges/$slug'
+      path: '/$slug'
+      fullPath: '/colleges/$slug'
+      preLoaderRoute: typeof CollegesSlugRouteImport
+      parentRoute: typeof CollegesRoute
+    }
     '/careers/$slug': {
       id: '/careers/$slug'
       path: '/$slug'
@@ -389,6 +427,30 @@ const CareersRouteChildren: CareersRouteChildren = {
 const CareersRouteWithChildren =
   CareersRoute._addFileChildren(CareersRouteChildren)
 
+interface CollegesRouteChildren {
+  CollegesSlugRoute: typeof CollegesSlugRoute
+}
+
+const CollegesRouteChildren: CollegesRouteChildren = {
+  CollegesSlugRoute: CollegesSlugRoute,
+}
+
+const CollegesRouteWithChildren = CollegesRoute._addFileChildren(
+  CollegesRouteChildren,
+)
+
+interface ScholarshipsRouteChildren {
+  ScholarshipsSlugRoute: typeof ScholarshipsSlugRoute
+}
+
+const ScholarshipsRouteChildren: ScholarshipsRouteChildren = {
+  ScholarshipsSlugRoute: ScholarshipsSlugRoute,
+}
+
+const ScholarshipsRouteWithChildren = ScholarshipsRoute._addFileChildren(
+  ScholarshipsRouteChildren,
+)
+
 interface StreamsRouteChildren {
   StreamsSlugRoute: typeof StreamsSlugRoute
 }
@@ -405,12 +467,12 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CareersRoute: CareersRouteWithChildren,
-  CollegesRoute: CollegesRoute,
+  CollegesRoute: CollegesRouteWithChildren,
   ContactRoute: ContactRoute,
   MentorRoute: MentorRoute,
   QuizRoute: QuizRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  ScholarshipsRoute: ScholarshipsRoute,
+  ScholarshipsRoute: ScholarshipsRouteWithChildren,
   SkillsRoute: SkillsRoute,
   StreamsRoute: StreamsRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRoute,
@@ -419,13 +481,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

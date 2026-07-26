@@ -26,8 +26,8 @@ function Dashboard() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [userId, setUserId] = useState<string>("");
   const [savedCareers, setSavedCareers] = useState<string[]>([]);
-  const [savedColleges, setSavedColleges] = useState<string[]>([]);
-  const [savedScholarships, setSavedScholarships] = useState<{ name: string; deadline: string | null }[]>([]);
+  const [savedColleges, setSavedColleges] = useState<{ name: string; slug: string | null }[]>([]);
+  const [savedScholarships, setSavedScholarships] = useState<{ name: string; slug: string | null; deadline: string | null }[]>([]);
   const [skillProgress, setSkillProgress] = useState<Record<string, number>>({});
   const [notifs, setNotifs] = useState<{ id: string; title: string; body: string | null; category: string; read: boolean; created_at: string }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,15 +40,15 @@ function Dashboard() {
       const [p, sc, scol, sch, sp, n] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
         supabase.from("saved_careers").select("career_slug").eq("user_id", user.id),
-        supabase.from("saved_colleges").select("college_name").eq("user_id", user.id),
-        supabase.from("saved_scholarships").select("scholarship_name,deadline").eq("user_id", user.id),
+        supabase.from("saved_colleges").select("college_name,college_slug").eq("user_id", user.id),
+        supabase.from("saved_scholarships").select("scholarship_name,scholarship_slug,deadline").eq("user_id", user.id),
         supabase.from("skill_progress").select("skill_name,progress").eq("user_id", user.id),
         supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(8),
       ]);
       setProfile(p.data as Profile);
       setSavedCareers((sc.data ?? []).map((r) => r.career_slug));
-      setSavedColleges((scol.data ?? []).map((r) => r.college_name));
-      setSavedScholarships((sch.data ?? []).map((r) => ({ name: r.scholarship_name, deadline: r.deadline })));
+      setSavedColleges((scol.data ?? []).map((r) => ({ name: r.college_name, slug: r.college_slug })));
+      setSavedScholarships((sch.data ?? []).map((r) => ({ name: r.scholarship_name, slug: r.scholarship_slug, deadline: r.deadline })));
       const sm: Record<string, number> = {};
       (sp.data ?? []).forEach((r) => { sm[r.skill_name] = r.progress; });
       DEFAULT_SKILLS.forEach((s) => { if (sm[s] === undefined) sm[s] = 0; });
@@ -238,13 +238,17 @@ function Dashboard() {
                 <ul className="space-y-2 text-sm">
                   {savedScholarships.map((s) => (
                     <li key={s.name} className="flex justify-between gap-2 p-2 rounded-lg bg-muted/40">
-                      <span className="font-medium">{s.name}</span>
+                      {s.slug ? (
+                        <Link to="/scholarships/$slug" params={{ slug: s.slug }} className="font-medium hover:text-primary">{s.name}</Link>
+                      ) : (
+                        <span className="font-medium">{s.name}</span>
+                      )}
                       {s.deadline && <span className="text-xs text-muted-foreground">{s.deadline}</span>}
                     </li>
                   ))}
                 </ul>
               )}
-              <p className="text-xs text-muted-foreground mt-3">{scholarships.length}+ scholarships in our database.</p>
+              <p className="text-xs text-muted-foreground mt-3">1000+ scholarships in our database.</p>
             </Card>
 
             <Card icon={GraduationCap} title="College Wishlist">
@@ -252,7 +256,15 @@ function Dashboard() {
                 <Link to="/colleges" className="text-sm text-primary font-medium hover:underline">Find colleges →</Link>
               ) : (
                 <ul className="space-y-1 text-sm">
-                  {savedColleges.map((c) => <li key={c} className="px-2 py-1 rounded bg-muted/40">{c}</li>)}
+                  {savedColleges.map((c) => (
+                    <li key={c.name} className="px-2 py-1 rounded bg-muted/40">
+                      {c.slug ? (
+                        <Link to="/colleges/$slug" params={{ slug: c.slug }} className="hover:text-primary">{c.name}</Link>
+                      ) : (
+                        <span>{c.name}</span>
+                      )}
+                    </li>
+                  ))}
                 </ul>
               )}
             </Card>
