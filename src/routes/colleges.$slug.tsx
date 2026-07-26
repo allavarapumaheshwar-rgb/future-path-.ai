@@ -196,7 +196,7 @@ function CollegeDetailPage() {
 
             <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
               <h3 className="font-display font-bold text-lg mb-3">Admission</h3>
-              <p className="text-sm text-foreground/80 leading-relaxed">{college.admission_process || "Please check the official website for the latest admission process and important dates."}</p>
+              <p className="text-sm text-foreground/80 leading-relaxed">Please check the official website for the latest admission process, eligibility criteria and important dates.</p>
             </div>
           </aside>
         </div>
