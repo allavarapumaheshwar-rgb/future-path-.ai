@@ -238,13 +238,17 @@ function Dashboard() {
                 <ul className="space-y-2 text-sm">
                   {savedScholarships.map((s) => (
                     <li key={s.name} className="flex justify-between gap-2 p-2 rounded-lg bg-muted/40">
-                      <span className="font-medium">{s.name}</span>
+                      {s.slug ? (
+                        <Link to="/scholarships/$slug" params={{ slug: s.slug }} className="font-medium hover:text-primary">{s.name}</Link>
+                      ) : (
+                        <span className="font-medium">{s.name}</span>
+                      )}
                       {s.deadline && <span className="text-xs text-muted-foreground">{s.deadline}</span>}
                     </li>
                   ))}
                 </ul>
               )}
-              <p className="text-xs text-muted-foreground mt-3">{scholarships.length}+ scholarships in our database.</p>
+              <p className="text-xs text-muted-foreground mt-3">1000+ scholarships in our database.</p>
             </Card>
 
             <Card icon={GraduationCap} title="College Wishlist">
@@ -252,7 +256,15 @@ function Dashboard() {
                 <Link to="/colleges" className="text-sm text-primary font-medium hover:underline">Find colleges →</Link>
               ) : (
                 <ul className="space-y-1 text-sm">
-                  {savedColleges.map((c) => <li key={c} className="px-2 py-1 rounded bg-muted/40">{c}</li>)}
+                  {savedColleges.map((c) => (
+                    <li key={c.name} className="px-2 py-1 rounded bg-muted/40">
+                      {c.slug ? (
+                        <Link to="/colleges/$slug" params={{ slug: c.slug }} className="hover:text-primary">{c.name}</Link>
+                      ) : (
+                        <span>{c.name}</span>
+                      )}
+                    </li>
+                  ))}
                 </ul>
               )}
             </Card>
