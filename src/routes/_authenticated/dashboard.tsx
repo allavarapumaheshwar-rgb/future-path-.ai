@@ -40,8 +40,8 @@ function Dashboard() {
       const [p, sc, scol, sch, sp, n] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
         supabase.from("saved_careers").select("career_slug").eq("user_id", user.id),
-        supabase.from("saved_colleges").select("college_name").eq("user_id", user.id),
-        supabase.from("saved_scholarships").select("scholarship_name,deadline").eq("user_id", user.id),
+        supabase.from("saved_colleges").select("college_name,college_slug").eq("user_id", user.id),
+        supabase.from("saved_scholarships").select("scholarship_name,scholarship_slug,deadline").eq("user_id", user.id),
         supabase.from("skill_progress").select("skill_name,progress").eq("user_id", user.id),
         supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(8),
       ]);
