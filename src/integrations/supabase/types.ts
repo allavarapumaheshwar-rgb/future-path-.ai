@@ -14,6 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
+      colleges: {
+        Row: {
+          accreditation: string | null
+          category: string[] | null
+          city: string | null
+          courses: string[] | null
+          created_at: string | null
+          description: string | null
+          district: string | null
+          eligibility: string | null
+          email: string | null
+          entrance_exams: string[] | null
+          facilities: string[] | null
+          fees_max: number | null
+          fees_min: number | null
+          hostel: boolean | null
+          id: string
+          logo_url: string | null
+          name: string
+          phone: string | null
+          placement_avg: number | null
+          placement_high: number | null
+          ranking: number | null
+          slug: string
+          state: string | null
+          type: string | null
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          accreditation?: string | null
+          category?: string[] | null
+          city?: string | null
+          courses?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          district?: string | null
+          eligibility?: string | null
+          email?: string | null
+          entrance_exams?: string[] | null
+          facilities?: string[] | null
+          fees_max?: number | null
+          fees_min?: number | null
+          hostel?: boolean | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          phone?: string | null
+          placement_avg?: number | null
+          placement_high?: number | null
+          ranking?: number | null
+          slug: string
+          state?: string | null
+          type?: string | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          accreditation?: string | null
+          category?: string[] | null
+          city?: string | null
+          courses?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          district?: string | null
+          eligibility?: string | null
+          email?: string | null
+          entrance_exams?: string[] | null
+          facilities?: string[] | null
+          fees_max?: number | null
+          fees_min?: number | null
+          hostel?: boolean | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          phone?: string | null
+          placement_avg?: number | null
+          placement_high?: number | null
+          ranking?: number | null
+          slug?: string
+          state?: string | null
+          type?: string | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string | null
@@ -107,18 +194,21 @@ export type Database = {
       saved_colleges: {
         Row: {
           college_name: string
+          college_slug: string | null
           created_at: string
           id: string
           user_id: string
         }
         Insert: {
           college_name: string
+          college_slug?: string | null
           created_at?: string
           id?: string
           user_id: string
         }
         Update: {
           college_name?: string
+          college_slug?: string | null
           created_at?: string
           id?: string
           user_id?: string
@@ -131,6 +221,7 @@ export type Database = {
           deadline: string | null
           id: string
           scholarship_name: string
+          scholarship_slug: string | null
           user_id: string
         }
         Insert: {
@@ -138,6 +229,7 @@ export type Database = {
           deadline?: string | null
           id?: string
           scholarship_name: string
+          scholarship_slug?: string | null
           user_id: string
         }
         Update: {
@@ -145,7 +237,89 @@ export type Database = {
           deadline?: string | null
           id?: string
           scholarship_name?: string
+          scholarship_slug?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      scholarships: {
+        Row: {
+          amount: string | null
+          application_last: string | null
+          application_start: string | null
+          apply_link: string | null
+          category: string[] | null
+          course: string[] | null
+          created_at: string | null
+          description: string | null
+          documents: string[] | null
+          faq: Json | null
+          gender: string | null
+          id: string
+          income_limit: string | null
+          is_active: boolean | null
+          level: string[] | null
+          name: string
+          provider: string | null
+          provider_type: string | null
+          selection_process: string | null
+          slug: string
+          state: string | null
+          stream: string[] | null
+          updated_at: string | null
+          website: string | null
+        }
+        Insert: {
+          amount?: string | null
+          application_last?: string | null
+          application_start?: string | null
+          apply_link?: string | null
+          category?: string[] | null
+          course?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          documents?: string[] | null
+          faq?: Json | null
+          gender?: string | null
+          id?: string
+          income_limit?: string | null
+          is_active?: boolean | null
+          level?: string[] | null
+          name: string
+          provider?: string | null
+          provider_type?: string | null
+          selection_process?: string | null
+          slug: string
+          state?: string | null
+          stream?: string[] | null
+          updated_at?: string | null
+          website?: string | null
+        }
+        Update: {
+          amount?: string | null
+          application_last?: string | null
+          application_start?: string | null
+          apply_link?: string | null
+          category?: string[] | null
+          course?: string[] | null
+          created_at?: string | null
+          description?: string | null
+          documents?: string[] | null
+          faq?: Json | null
+          gender?: string | null
+          id?: string
+          income_limit?: string | null
+          is_active?: boolean | null
+          level?: string[] | null
+          name?: string
+          provider?: string | null
+          provider_type?: string | null
+          selection_process?: string | null
+          slug?: string
+          state?: string | null
+          stream?: string[] | null
+          updated_at?: string | null
+          website?: string | null
         }
         Relationships: []
       }
