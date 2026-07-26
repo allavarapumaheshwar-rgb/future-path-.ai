@@ -130,7 +130,7 @@ function ScholarshipDetailPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
             <InfoCard icon={Calendar} label="Application Opens" value={startText} />
             <InfoCard icon={Clock} label="Last Date" value={deadlineText} />
-            <InfoCard icon={Users} label="Eligibility" value={s.eligibility_criteria || "Refer website"} />
+            <InfoCard icon={Users} label="Eligibility" value={s.eligibility || "Refer website"} />
             <InfoCard icon={Building2} label="Provider Type" value={s.provider_type || "N/A"} />
           </div>
         </div>
@@ -138,7 +138,7 @@ function ScholarshipDetailPage() {
         <div className="grid lg:grid-cols-3 gap-6 mt-6">
           <div className="lg:col-span-2 space-y-6">
             <DetailSection title="Scholarship Benefits" icon={CheckCircle2}>
-              <p className="text-foreground/80 leading-relaxed">{s.benefits || s.amount || "Please visit the official website for detailed benefit information."}</p>
+              <p className="text-foreground/80 leading-relaxed">{s.amount || "Please visit the official website for detailed benefit information."}</p>
               {s.amount && (
                 <div className="mt-4 inline-flex items-center gap-2 text-lg font-bold text-primary px-4 py-2 rounded-xl bg-primary/10">
                   Award: {s.amount}
@@ -147,7 +147,7 @@ function ScholarshipDetailPage() {
             </DetailSection>
 
             <DetailSection title="Eligibility Criteria" icon={Users}>
-              <p className="text-foreground/80 leading-relaxed">{s.eligibility_criteria || "Please check the official notification for complete eligibility details."}</p>
+              <p className="text-foreground/80 leading-relaxed">{s.eligibility || "Please check the official notification for complete eligibility details."}</p>
             </DetailSection>
 
             <DetailSection title="Required Documents" icon={FileText}>
