@@ -130,7 +130,7 @@ function ScholarshipDetailPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
             <InfoCard icon={Calendar} label="Application Opens" value={startText} />
             <InfoCard icon={Clock} label="Last Date" value={deadlineText} />
-            <InfoCard icon={Users} label="Eligibility" value={s.eligibility || "Refer website"} />
+            <InfoCard icon={Users} label="Income Limit" value={s.income_limit || "N/A"} />
             <InfoCard icon={Building2} label="Provider Type" value={s.provider_type || "N/A"} />
           </div>
         </div>
@@ -146,8 +146,8 @@ function ScholarshipDetailPage() {
               )}
             </DetailSection>
 
-            <DetailSection title="Eligibility Criteria" icon={Users}>
-              <p className="text-foreground/80 leading-relaxed">{s.eligibility || "Please check the official notification for complete eligibility details."}</p>
+            <DetailSection title="Eligibility & Description" icon={Users}>
+              <p className="text-foreground/80 leading-relaxed">{s.description || "Please check the official notification for complete eligibility details."}</p>
             </DetailSection>
 
             <DetailSection title="Required Documents" icon={FileText}>
