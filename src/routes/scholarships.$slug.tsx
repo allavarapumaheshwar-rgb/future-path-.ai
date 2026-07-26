@@ -194,11 +194,6 @@ function ScholarshipDetailPage() {
                     <Globe className="h-4 w-4 shrink-0 text-muted-foreground" /> Official website
                   </a>
                 )}
-                {s.contact_details && (
-                  <div className="flex items-start gap-2">
-                    <Mail className="h-4 w-4 shrink-0 text-muted-foreground mt-0.5" /> {s.contact_details}
-                  </div>
-                )}
               </div>
               {s.apply_link && (
                 <a href={s.apply_link} target="_blank" rel="noreferrer" className="mt-5 block w-full text-center px-4 py-2.5 rounded-xl gradient-primary text-primary-foreground text-sm font-semibold hover:shadow-glow">
