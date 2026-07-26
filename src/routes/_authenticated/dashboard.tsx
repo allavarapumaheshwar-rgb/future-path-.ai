@@ -47,8 +47,8 @@ function Dashboard() {
       ]);
       setProfile(p.data as Profile);
       setSavedCareers((sc.data ?? []).map((r) => r.career_slug));
-      setSavedColleges((scol.data ?? []).map((r) => r.college_name));
-      setSavedScholarships((sch.data ?? []).map((r) => ({ name: r.scholarship_name, deadline: r.deadline })));
+      setSavedColleges((scol.data ?? []).map((r) => ({ name: r.college_name, slug: r.college_slug })));
+      setSavedScholarships((sch.data ?? []).map((r) => ({ name: r.scholarship_name, slug: r.scholarship_slug, deadline: r.deadline })));
       const sm: Record<string, number> = {};
       (sp.data ?? []).forEach((r) => { sm[r.skill_name] = r.progress; });
       DEFAULT_SKILLS.forEach((s) => { if (sm[s] === undefined) sm[s] = 0; });
