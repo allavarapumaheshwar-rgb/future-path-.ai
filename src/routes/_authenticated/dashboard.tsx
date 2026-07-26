@@ -26,8 +26,8 @@ function Dashboard() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [userId, setUserId] = useState<string>("");
   const [savedCareers, setSavedCareers] = useState<string[]>([]);
-  const [savedColleges, setSavedColleges] = useState<string[]>([]);
-  const [savedScholarships, setSavedScholarships] = useState<{ name: string; deadline: string | null }[]>([]);
+  const [savedColleges, setSavedColleges] = useState<{ name: string; slug: string | null }[]>([]);
+  const [savedScholarships, setSavedScholarships] = useState<{ name: string; slug: string | null; deadline: string | null }[]>([]);
   const [skillProgress, setSkillProgress] = useState<Record<string, number>>({});
   const [notifs, setNotifs] = useState<{ id: string; title: string; body: string | null; category: string; read: boolean; created_at: string }[]>([]);
   const [loading, setLoading] = useState(true);
