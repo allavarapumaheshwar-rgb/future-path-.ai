@@ -8,9 +8,7 @@ const nav = [
   { to: "/", label: "Home" },
   { to: "/streams", label: "Streams" },
   { to: "/careers", label: "Careers" },
-  { to: "/roadmap", label: "Roadmap" },
   { to: "/mentor", label: "AI Mentor" },
-
   { to: "/quiz", label: "Quiz" },
   { to: "/colleges", label: "Colleges" },
   { to: "/scholarships", label: "Scholarships" },

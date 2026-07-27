@@ -170,45 +170,6 @@ export type Database = {
         }
         Relationships: []
       }
-      roadmaps: {
-        Row: {
-          career_slug: string | null
-          completed_steps: number[]
-          created_at: string
-          id: string
-          is_active: boolean
-          source: string
-          steps: Json
-          title: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          career_slug?: string | null
-          completed_steps?: number[]
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          source?: string
-          steps?: Json
-          title: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          career_slug?: string | null
-          completed_steps?: number[]
-          created_at?: string
-          id?: string
-          is_active?: boolean
-          source?: string
-          steps?: Json
-          title?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       saved_careers: {
         Row: {
           career_slug: string
