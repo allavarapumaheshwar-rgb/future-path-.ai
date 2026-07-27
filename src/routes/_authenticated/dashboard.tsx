@@ -5,9 +5,13 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   BookOpen, Briefcase, GraduationCap, Award, Bell, Target,
   TrendingUp, Sparkles, LogOut, Heart, Trophy, BarChart3, MessageCircle,
+  Route as RouteIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { streams, careers, scholarships, skillsList } from "@/lib/data";
+import { RoadmapTimeline } from "@/components/RoadmapTimeline";
+import { progressPercent, type RoadmapStage } from "@/lib/roadmap";
+
 
 interface Profile {
   full_name: string | null; email: string | null; mobile: string | null;
@@ -174,6 +178,41 @@ function Dashboard() {
               </div>
             </Card>
 
+            <Card icon={RouteIcon} title="My Career Roadmap">
+              {activeRoadmap ? (
+                <>
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <p className="font-semibold">{activeRoadmap.title}</p>
+                    <span className="text-xs text-muted-foreground">{roadmapPercent}% complete</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-muted overflow-hidden mb-4">
+                    <div className="h-full gradient-primary transition-all" style={{ width: `${roadmapPercent}%` }} />
+                  </div>
+                  <RoadmapTimeline
+                    stages={activeRoadmap.steps}
+                    completed={activeRoadmap.completed_steps}
+                    onToggle={toggleRoadmapStep}
+                    compact
+                  />
+                  <Link to="/roadmap" className="mt-4 inline-block text-sm text-primary font-medium hover:underline">
+                    Open Roadmap Builder →
+                  </Link>
+                </>
+              ) : (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    No roadmap saved yet. Build a step-by-step plan for your target career and track it here.
+                  </p>
+                  <Link
+                    to="/roadmap"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl gradient-primary text-primary-foreground text-sm font-semibold hover-lift"
+                  >
+                    <Sparkles className="h-4 w-4" /> Build my roadmap
+                  </Link>
+                </div>
+              )}
+            </Card>
+
             <Card icon={BookOpen} title={`${recommendedStream?.name ?? ""} Roadmap`}>
               <ol className="relative border-l-2 border-primary/20 ml-2 space-y-4">
                 {[
@@ -190,6 +229,7 @@ function Dashboard() {
                 ))}
               </ol>
             </Card>
+
 
             <Card icon={BarChart3} title="Skill Progress Tracker">
               <div className="space-y-4">
