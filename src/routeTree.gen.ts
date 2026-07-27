@@ -26,6 +26,7 @@ import { Route as StreamsSlugRouteImport } from './routes/streams.$slug'
 import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
 import { Route as CollegesSlugRouteImport } from './routes/colleges.$slug'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
+import { Route as ApiRoadmapRouteImport } from './routes/api/roadmap'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
@@ -113,6 +114,11 @@ const CareersSlugRoute = CareersSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => CareersRoute,
 } as any)
+const ApiRoadmapRoute = ApiRoadmapRouteImport.update({
+  id: '/api/roadmap',
+  path: '/api/roadmap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/success-stories': typeof SuccessStoriesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/roadmap': typeof ApiRoadmapRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/colleges/$slug': typeof CollegesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/success-stories': typeof SuccessStoriesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/roadmap': typeof ApiRoadmapRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/colleges/$slug': typeof CollegesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/success-stories': typeof SuccessStoriesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/roadmap': typeof ApiRoadmapRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/colleges/$slug': typeof CollegesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/success-stories'
     | '/dashboard'
     | '/api/chat'
+    | '/api/roadmap'
     | '/careers/$slug'
     | '/colleges/$slug'
     | '/scholarships/$slug'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/success-stories'
     | '/dashboard'
     | '/api/chat'
+    | '/api/roadmap'
     | '/careers/$slug'
     | '/colleges/$slug'
     | '/scholarships/$slug'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/success-stories'
     | '/_authenticated/dashboard'
     | '/api/chat'
+    | '/api/roadmap'
     | '/careers/$slug'
     | '/colleges/$slug'
     | '/scholarships/$slug'
@@ -265,6 +277,7 @@ export interface RootRouteChildren {
   StreamsRoute: typeof StreamsRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiRoadmapRoute: typeof ApiRoadmapRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -388,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CareersSlugRouteImport
       parentRoute: typeof CareersRoute
     }
+    '/api/roadmap': {
+      id: '/api/roadmap'
+      path: '/api/roadmap'
+      fullPath: '/api/roadmap'
+      preLoaderRoute: typeof ApiRoadmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -477,6 +497,7 @@ const rootRouteChildren: RootRouteChildren = {
   StreamsRoute: StreamsRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiRoadmapRoute: ApiRoadmapRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
