@@ -18,6 +18,14 @@ interface Profile {
   grade: string | null; stream: string | null; interests: string[] | null;
 }
 
+interface ActiveRoadmap {
+  id: string;
+  title: string;
+  steps: RoadmapStage[];
+  completed_steps: number[];
+}
+
+
 const DEFAULT_SKILLS = ["Communication", "Leadership", "Coding", "Public Speaking", "Critical Thinking"];
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -34,6 +42,7 @@ function Dashboard() {
   const [savedScholarships, setSavedScholarships] = useState<{ name: string; slug: string | null; deadline: string | null }[]>([]);
   const [skillProgress, setSkillProgress] = useState<Record<string, number>>({});
   const [notifs, setNotifs] = useState<{ id: string; title: string; body: string | null; category: string; read: boolean; created_at: string }[]>([]);
+  const [activeRoadmap, setActiveRoadmap] = useState<ActiveRoadmap | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,13 +50,15 @@ function Dashboard() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       setUserId(user.id);
-      const [p, sc, scol, sch, sp, n] = await Promise.all([
+      const [p, sc, scol, sch, sp, n, rm] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
         supabase.from("saved_careers").select("career_slug").eq("user_id", user.id),
         supabase.from("saved_colleges").select("college_name,college_slug").eq("user_id", user.id),
         supabase.from("saved_scholarships").select("scholarship_name,scholarship_slug,deadline").eq("user_id", user.id),
         supabase.from("skill_progress").select("skill_name,progress").eq("user_id", user.id),
         supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(8),
+        supabase.from("roadmaps").select("id,title,steps,completed_steps").eq("user_id", user.id).eq("is_active", true)
+          .order("updated_at", { ascending: false }).limit(1).maybeSingle(),
       ]);
       setProfile(p.data as Profile);
       setSavedCareers((sc.data ?? []).map((r) => r.career_slug));
@@ -58,9 +69,30 @@ function Dashboard() {
       DEFAULT_SKILLS.forEach((s) => { if (sm[s] === undefined) sm[s] = 0; });
       setSkillProgress(sm);
       setNotifs(n.data ?? []);
+      if (rm.data) {
+        setActiveRoadmap({
+          id: rm.data.id,
+          title: rm.data.title,
+          steps: (rm.data.steps as unknown as RoadmapStage[]) ?? [],
+          completed_steps: rm.data.completed_steps ?? [],
+        });
+      }
       setLoading(false);
     })();
   }, []);
+
+  async function toggleRoadmapStep(index: number) {
+    if (!activeRoadmap) return;
+    const next = activeRoadmap.completed_steps.includes(index)
+      ? activeRoadmap.completed_steps.filter((i) => i !== index)
+      : [...activeRoadmap.completed_steps, index];
+    setActiveRoadmap({ ...activeRoadmap, completed_steps: next });
+    const { error } = await supabase
+      .from("roadmaps")
+      .update({ completed_steps: next, updated_at: new Date().toISOString() })
+      .eq("id", activeRoadmap.id);
+    if (error) toast.error("Could not save your roadmap progress.");
+  }
 
   async function setSkill(name: string, value: number) {
     setSkillProgress((m) => ({ ...m, [name]: value }));
@@ -69,6 +101,7 @@ function Dashboard() {
       { onConflict: "user_id,skill_name" },
     );
   }
+
 
   async function signOut() {
     await supabase.auth.signOut();
