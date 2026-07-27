@@ -115,7 +115,9 @@ function Dashboard() {
   const recommendedCareers = recommendedStream
     ? careers.filter((c) => recommendedStream.careers.some((rc) => c.title.toLowerCase().includes(rc.toLowerCase().split(" ")[0]))).slice(0, 6)
     : careers.slice(0, 6);
+  const roadmapPercent = activeRoadmap ? progressPercent(activeRoadmap.steps, activeRoadmap.completed_steps) : 0;
   const avgSkill = Math.round(
+
     Object.values(skillProgress).reduce((a, b) => a + b, 0) / Math.max(Object.keys(skillProgress).length, 1),
   );
 
