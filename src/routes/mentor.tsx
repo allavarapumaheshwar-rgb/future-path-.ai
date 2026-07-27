@@ -4,6 +4,8 @@ import { Layout } from "@/components/Layout";
 import { Send, Sparkles, Bot, User, RotateCcw, Loader2, Lightbulb } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+
 
 export const Route = createFileRoute("/mentor")({
   head: () => ({
@@ -63,11 +65,22 @@ function MentorPage() {
     setInput("");
     setLoading(true);
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (!accessToken) {
+        toast.error("Please sign in to chat with the AI Mentor.");
+        setMessages(next);
+        return;
+      }
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({ messages: next }),
       });
+
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.error || "Failed to get response");
