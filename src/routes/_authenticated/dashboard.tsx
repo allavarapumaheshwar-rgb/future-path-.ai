@@ -5,14 +5,26 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   BookOpen, Briefcase, GraduationCap, Award, Bell, Target,
   TrendingUp, Sparkles, LogOut, Heart, Trophy, BarChart3, MessageCircle,
+  Route as RouteIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import { streams, careers, scholarships, skillsList } from "@/lib/data";
+import { RoadmapTimeline } from "@/components/RoadmapTimeline";
+import { progressPercent, type RoadmapStage } from "@/lib/roadmap";
+
 
 interface Profile {
   full_name: string | null; email: string | null; mobile: string | null;
   grade: string | null; stream: string | null; interests: string[] | null;
 }
+
+interface ActiveRoadmap {
+  id: string;
+  title: string;
+  steps: RoadmapStage[];
+  completed_steps: number[];
+}
+
 
 const DEFAULT_SKILLS = ["Communication", "Leadership", "Coding", "Public Speaking", "Critical Thinking"];
 
@@ -30,6 +42,7 @@ function Dashboard() {
   const [savedScholarships, setSavedScholarships] = useState<{ name: string; slug: string | null; deadline: string | null }[]>([]);
   const [skillProgress, setSkillProgress] = useState<Record<string, number>>({});
   const [notifs, setNotifs] = useState<{ id: string; title: string; body: string | null; category: string; read: boolean; created_at: string }[]>([]);
+  const [activeRoadmap, setActiveRoadmap] = useState<ActiveRoadmap | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,13 +50,15 @@ function Dashboard() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       setUserId(user.id);
-      const [p, sc, scol, sch, sp, n] = await Promise.all([
+      const [p, sc, scol, sch, sp, n, rm] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
         supabase.from("saved_careers").select("career_slug").eq("user_id", user.id),
         supabase.from("saved_colleges").select("college_name,college_slug").eq("user_id", user.id),
         supabase.from("saved_scholarships").select("scholarship_name,scholarship_slug,deadline").eq("user_id", user.id),
         supabase.from("skill_progress").select("skill_name,progress").eq("user_id", user.id),
         supabase.from("notifications").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(8),
+        supabase.from("roadmaps").select("id,title,steps,completed_steps").eq("user_id", user.id).eq("is_active", true)
+          .order("updated_at", { ascending: false }).limit(1).maybeSingle(),
       ]);
       setProfile(p.data as Profile);
       setSavedCareers((sc.data ?? []).map((r) => r.career_slug));
@@ -54,9 +69,30 @@ function Dashboard() {
       DEFAULT_SKILLS.forEach((s) => { if (sm[s] === undefined) sm[s] = 0; });
       setSkillProgress(sm);
       setNotifs(n.data ?? []);
+      if (rm.data) {
+        setActiveRoadmap({
+          id: rm.data.id,
+          title: rm.data.title,
+          steps: (rm.data.steps as unknown as RoadmapStage[]) ?? [],
+          completed_steps: rm.data.completed_steps ?? [],
+        });
+      }
       setLoading(false);
     })();
   }, []);
+
+  async function toggleRoadmapStep(index: number) {
+    if (!activeRoadmap) return;
+    const next = activeRoadmap.completed_steps.includes(index)
+      ? activeRoadmap.completed_steps.filter((i) => i !== index)
+      : [...activeRoadmap.completed_steps, index];
+    setActiveRoadmap({ ...activeRoadmap, completed_steps: next });
+    const { error } = await supabase
+      .from("roadmaps")
+      .update({ completed_steps: next, updated_at: new Date().toISOString() })
+      .eq("id", activeRoadmap.id);
+    if (error) toast.error("Could not save your roadmap progress.");
+  }
 
   async function setSkill(name: string, value: number) {
     setSkillProgress((m) => ({ ...m, [name]: value }));
@@ -65,6 +101,7 @@ function Dashboard() {
       { onConflict: "user_id,skill_name" },
     );
   }
+
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -78,7 +115,9 @@ function Dashboard() {
   const recommendedCareers = recommendedStream
     ? careers.filter((c) => recommendedStream.careers.some((rc) => c.title.toLowerCase().includes(rc.toLowerCase().split(" ")[0]))).slice(0, 6)
     : careers.slice(0, 6);
+  const roadmapPercent = activeRoadmap ? progressPercent(activeRoadmap.steps, activeRoadmap.completed_steps) : 0;
   const avgSkill = Math.round(
+
     Object.values(skillProgress).reduce((a, b) => a + b, 0) / Math.max(Object.keys(skillProgress).length, 1),
   );
 
@@ -174,6 +213,41 @@ function Dashboard() {
               </div>
             </Card>
 
+            <Card icon={RouteIcon} title="My Career Roadmap">
+              {activeRoadmap ? (
+                <>
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <p className="font-semibold">{activeRoadmap.title}</p>
+                    <span className="text-xs text-muted-foreground">{roadmapPercent}% complete</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-muted overflow-hidden mb-4">
+                    <div className="h-full gradient-primary transition-all" style={{ width: `${roadmapPercent}%` }} />
+                  </div>
+                  <RoadmapTimeline
+                    stages={activeRoadmap.steps}
+                    completed={activeRoadmap.completed_steps}
+                    onToggle={toggleRoadmapStep}
+                    compact
+                  />
+                  <Link to="/roadmap" className="mt-4 inline-block text-sm text-primary font-medium hover:underline">
+                    Open Roadmap Builder →
+                  </Link>
+                </>
+              ) : (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    No roadmap saved yet. Build a step-by-step plan for your target career and track it here.
+                  </p>
+                  <Link
+                    to="/roadmap"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl gradient-primary text-primary-foreground text-sm font-semibold hover-lift"
+                  >
+                    <Sparkles className="h-4 w-4" /> Build my roadmap
+                  </Link>
+                </div>
+              )}
+            </Card>
+
             <Card icon={BookOpen} title={`${recommendedStream?.name ?? ""} Roadmap`}>
               <ol className="relative border-l-2 border-primary/20 ml-2 space-y-4">
                 {[
@@ -190,6 +264,7 @@ function Dashboard() {
                 ))}
               </ol>
             </Card>
+
 
             <Card icon={BarChart3} title="Skill Progress Tracker">
               <div className="space-y-4">
