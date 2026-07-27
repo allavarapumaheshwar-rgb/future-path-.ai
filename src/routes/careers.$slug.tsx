@@ -1,6 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
+import { RoadmapTimeline } from "@/components/RoadmapTimeline";
+import { buildCareerRoadmap } from "@/lib/roadmap";
 import { careers } from "@/lib/data";
+
 import * as Icons from "lucide-react";
 import { ArrowLeft, BookOpen, Brain, GraduationCap, IndianRupee, TrendingUp, Rocket, Target, CheckCircle2 } from "lucide-react";
 
@@ -63,16 +66,17 @@ function CareerDetail() {
         </Card>
         <div className="lg:col-span-2">
           <Card icon={Target} title="Career Roadmap">
-            <ol className="space-y-3">
-              {career.roadmap.map((step: string, i: number) => (
-                <li key={i} className="flex gap-3 items-start">
-                  <div className="grid h-7 w-7 shrink-0 place-items-center rounded-full gradient-primary text-primary-foreground text-xs font-bold">{i + 1}</div>
-                  <div className="flex-1 pt-1 text-sm text-foreground/85">{step}</div>
-                </li>
-              ))}
-            </ol>
+            <RoadmapTimeline stages={buildCareerRoadmap(career).stages} />
+            <Link
+              to="/roadmap"
+              search={{ career: career.slug }}
+              className="mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl gradient-primary text-primary-foreground text-sm font-semibold hover-lift"
+            >
+              Open in Roadmap Builder →
+            </Link>
           </Card>
         </div>
+
         <Card icon={TrendingUp} title="Future Demand"><p className="text-sm text-foreground/80">{career.futureDemand}</p></Card>
         <Card icon={Rocket} title="Growth Opportunities"><p className="text-sm text-foreground/80">{career.growth}</p></Card>
       </section>
