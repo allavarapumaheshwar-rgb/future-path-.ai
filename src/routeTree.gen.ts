@@ -13,6 +13,7 @@ import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StreamsRouteImport } from './routes/streams'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as ScholarshipsRouteImport } from './routes/scholarships'
+import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as MentorRouteImport } from './routes/mentor'
@@ -48,6 +49,11 @@ const SkillsRoute = SkillsRouteImport.update({
 const ScholarshipsRoute = ScholarshipsRouteImport.update({
   id: '/scholarships',
   path: '/scholarships',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoadmapRoute = RoadmapRouteImport.update({
+  id: '/roadmap',
+  path: '/roadmap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/mentor': typeof MentorRoute
   '/quiz': typeof QuizRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/mentor': typeof MentorRoute
   '/quiz': typeof QuizRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/mentor': typeof MentorRoute
   '/quiz': typeof QuizRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
@@ -206,6 +215,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/quiz'
     | '/reset-password'
+    | '/roadmap'
     | '/scholarships'
     | '/skills'
     | '/streams'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/quiz'
     | '/reset-password'
+    | '/roadmap'
     | '/scholarships'
     | '/skills'
     | '/streams'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/quiz'
     | '/reset-password'
+    | '/roadmap'
     | '/scholarships'
     | '/skills'
     | '/streams'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   MentorRoute: typeof MentorRoute
   QuizRoute: typeof QuizRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  RoadmapRoute: typeof RoadmapRoute
   ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
   SkillsRoute: typeof SkillsRoute
   StreamsRoute: typeof StreamsRouteWithChildren
@@ -308,6 +321,13 @@ declare module '@tanstack/react-router' {
       path: '/scholarships'
       fullPath: '/scholarships'
       preLoaderRoute: typeof ScholarshipsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/roadmap': {
+      id: '/roadmap'
+      path: '/roadmap'
+      fullPath: '/roadmap'
+      preLoaderRoute: typeof RoadmapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -492,6 +512,7 @@ const rootRouteChildren: RootRouteChildren = {
   MentorRoute: MentorRoute,
   QuizRoute: QuizRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  RoadmapRoute: RoadmapRoute,
   ScholarshipsRoute: ScholarshipsRouteWithChildren,
   SkillsRoute: SkillsRoute,
   StreamsRoute: StreamsRouteWithChildren,

@@ -6,6 +6,8 @@ import { RoadmapTimeline } from "@/components/RoadmapTimeline";
 import { careers } from "@/lib/data";
 import { buildCareerRoadmap, progressPercent, type Roadmap, type RoadmapStage } from "@/lib/roadmap";
 import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
+
 import { toast } from "sonner";
 import { Bookmark, Loader2, Map, Route as RouteIcon, Search, Sparkles, Wand2 } from "lucide-react";
 
@@ -132,11 +134,12 @@ function RoadmapPage() {
         career_slug: roadmap.careerSlug,
         title: roadmap.title,
         source: roadmap.source,
-        steps: roadmap.stages,
+        steps: roadmap.stages as unknown as Json,
         completed_steps: completed,
         is_active: true,
         updated_at: new Date().toISOString(),
       };
+
       const { error } = roadmap.careerSlug
         ? await supabase.from("roadmaps").upsert(payload, { onConflict: "user_id,career_slug" })
         : await supabase.from("roadmaps").insert(payload);
