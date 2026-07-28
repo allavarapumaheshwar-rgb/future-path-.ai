@@ -29,10 +29,10 @@ const listSchema = z.object({
   gender: z.string().optional(),
   stream: z.string().optional(),
   course: z.string().optional(),
-  closingSoon: z.boolean().optional(),
+  closingSoon: z.preprocess((v) => (v === "" || v === undefined ? undefined : v === true || v === "true"), z.boolean().optional()),
   sort: z.string().optional(),
-  page: z.number().int().min(1).optional(),
-  limit: z.number().int().min(1).max(100).optional(),
+  page: z.coerce.number().int().min(1).optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
 });
 
 export const listScholarships = createServerFn({ method: "GET" })
