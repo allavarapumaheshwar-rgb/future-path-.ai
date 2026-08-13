@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aspire-future-ai.lovable.app/sitemap.xml
