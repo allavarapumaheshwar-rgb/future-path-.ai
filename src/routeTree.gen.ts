@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SuccessStoriesRouteImport } from './routes/success-stories'
 import { Route as StreamsRouteImport } from './routes/streams'
 import { Route as SkillsRouteImport } from './routes/skills'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ScholarshipsRouteImport } from './routes/scholarships'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -44,6 +45,11 @@ const StreamsRoute = StreamsRouteImport.update({
 const SkillsRoute = SkillsRouteImport.update({
   id: '/skills',
   path: '/skills',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScholarshipsRoute = ScholarshipsRouteImport.update({
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/skills': typeof SkillsRoute
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/roadmap'
     | '/scholarships'
+    | '/sitemap.xml'
     | '/skills'
     | '/streams'
     | '/success-stories'
@@ -239,6 +249,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/roadmap'
     | '/scholarships'
+    | '/sitemap.xml'
     | '/skills'
     | '/streams'
     | '/success-stories'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/roadmap'
     | '/scholarships'
+    | '/sitemap.xml'
     | '/skills'
     | '/streams'
     | '/success-stories'
@@ -286,6 +298,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   RoadmapRoute: typeof RoadmapRoute
   ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SkillsRoute: typeof SkillsRoute
   StreamsRoute: typeof StreamsRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRoute
@@ -314,6 +327,13 @@ declare module '@tanstack/react-router' {
       path: '/skills'
       fullPath: '/skills'
       preLoaderRoute: typeof SkillsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/scholarships': {
@@ -514,6 +534,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   RoadmapRoute: RoadmapRoute,
   ScholarshipsRoute: ScholarshipsRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SkillsRoute: SkillsRoute,
   StreamsRoute: StreamsRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRoute,
