@@ -6,15 +6,24 @@ import { Sparkles, Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
-type AuthSearch = { mode?: "login" | "signup" | "forgot" };
+type AuthSearch = { mode?: "login" | "signup" | "forgot"; next?: string };
+
+/** Only allow same-origin relative paths as a post-login redirect target. */
+function safeNext(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  if (!value.startsWith("/") || value.startsWith("//")) return undefined;
+  return value;
+}
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>): AuthSearch => ({
     mode: (s.mode === "signup" || s.mode === "forgot" ? s.mode : "login"),
+    next: safeNext(s.next),
   }),
   head: () => ({ meta: [{ title: "Login & Signup — FuturePath AI" }] }),
   component: AuthPage,
 });
+
 
 const signupSchema = z.object({
   full_name: z.string().min(2, "Name is too short").max(80),
