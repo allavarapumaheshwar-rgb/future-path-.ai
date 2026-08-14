@@ -37,10 +37,15 @@ const signupSchema = z.object({
 });
 
 function AuthPage() {
-  const { mode = "login" } = useSearch({ from: "/auth" });
+  const { mode = "login", next } = useSearch({ from: "/auth" });
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
+  const goAfterAuth = () => {
+    if (next) window.location.href = next;
+    else navigate({ to: "/dashboard" });
+  };
+
 
   return (
     <Layout>
