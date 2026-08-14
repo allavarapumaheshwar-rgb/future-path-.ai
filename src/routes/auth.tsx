@@ -86,7 +86,7 @@ function AuthPage() {
               {(["login", "signup", "forgot"] as const).map((m) => (
                 <button
                   key={m}
-                  onClick={() => navigate({ to: "/auth", search: { mode: m } })}
+                  onClick={() => navigate({ to: "/auth", search: { mode: m, next } })}
                   className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
                     mode === m ? "bg-card shadow-soft text-foreground" : "text-muted-foreground hover:text-foreground"
                   }`}
@@ -96,8 +96,9 @@ function AuthPage() {
               ))}
             </div>
 
-            {mode === "login" && <LoginForm busy={busy} setBusy={setBusy} show={show} setShow={setShow} onSuccess={() => navigate({ to: "/dashboard" })} />}
-            {mode === "signup" && <SignupForm busy={busy} setBusy={setBusy} show={show} setShow={setShow} onSuccess={() => navigate({ to: "/dashboard" })} />}
+            {mode === "login" && <LoginForm busy={busy} setBusy={setBusy} show={show} setShow={setShow} next={next} onSuccess={goAfterAuth} />}
+            {mode === "signup" && <SignupForm busy={busy} setBusy={setBusy} show={show} setShow={setShow} next={next} onSuccess={goAfterAuth} />}
+
             {mode === "forgot" && <ForgotForm busy={busy} setBusy={setBusy} />}
           </div>
         </div>
