@@ -6,15 +6,24 @@ import { Sparkles, Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
-type AuthSearch = { mode?: "login" | "signup" | "forgot" };
+type AuthSearch = { mode?: "login" | "signup" | "forgot"; next?: string };
+
+/** Only allow same-origin relative paths as a post-login redirect target. */
+function safeNext(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  if (!value.startsWith("/") || value.startsWith("//")) return undefined;
+  return value;
+}
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>): AuthSearch => ({
     mode: (s.mode === "signup" || s.mode === "forgot" ? s.mode : "login"),
+    next: safeNext(s.next),
   }),
   head: () => ({ meta: [{ title: "Login & Signup — FuturePath AI" }] }),
   component: AuthPage,
 });
+
 
 const signupSchema = z.object({
   full_name: z.string().min(2, "Name is too short").max(80),
@@ -28,10 +37,15 @@ const signupSchema = z.object({
 });
 
 function AuthPage() {
-  const { mode = "login" } = useSearch({ from: "/auth" });
+  const { mode = "login", next } = useSearch({ from: "/auth" });
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
+  const goAfterAuth = () => {
+    if (next) window.location.href = next;
+    else navigate({ to: "/dashboard" });
+  };
+
 
   return (
     <Layout>
@@ -72,7 +86,7 @@ function AuthPage() {
               {(["login", "signup", "forgot"] as const).map((m) => (
                 <button
                   key={m}
-                  onClick={() => navigate({ to: "/auth", search: { mode: m } })}
+                  onClick={() => navigate({ to: "/auth", search: { mode: m, next } })}
                   className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition ${
                     mode === m ? "bg-card shadow-soft text-foreground" : "text-muted-foreground hover:text-foreground"
                   }`}
@@ -82,8 +96,9 @@ function AuthPage() {
               ))}
             </div>
 
-            {mode === "login" && <LoginForm busy={busy} setBusy={setBusy} show={show} setShow={setShow} onSuccess={() => navigate({ to: "/dashboard" })} />}
-            {mode === "signup" && <SignupForm busy={busy} setBusy={setBusy} show={show} setShow={setShow} onSuccess={() => navigate({ to: "/dashboard" })} />}
+            {mode === "login" && <LoginForm busy={busy} setBusy={setBusy} show={show} setShow={setShow} next={next} onSuccess={goAfterAuth} />}
+            {mode === "signup" && <SignupForm busy={busy} setBusy={setBusy} show={show} setShow={setShow} next={next} onSuccess={goAfterAuth} />}
+
             {mode === "forgot" && <ForgotForm busy={busy} setBusy={setBusy} />}
           </div>
         </div>
@@ -104,7 +119,7 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 const inputCls =
   "w-full px-3.5 py-2.5 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition";
 
-function LoginForm({ busy, setBusy, show, setShow, onSuccess }: { busy: boolean; setBusy: (b: boolean) => void; show: boolean; setShow: (b: boolean) => void; onSuccess: () => void }) {
+function LoginForm({ busy, setBusy, show, setShow, next, onSuccess }: { busy: boolean; setBusy: (b: boolean) => void; show: boolean; setShow: (b: boolean) => void; next?: string; onSuccess: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
@@ -124,7 +139,7 @@ function LoginForm({ busy, setBusy, show, setShow, onSuccess }: { busy: boolean;
     setBusy(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/dashboard` },
+      options: { redirectTo: `${window.location.origin}${next ?? "/dashboard"}` },
     });
     if (error) {
       setBusy(false);
@@ -171,13 +186,13 @@ function LoginForm({ busy, setBusy, show, setShow, onSuccess }: { busy: boolean;
       </button>
 
       <p className="text-sm text-center text-muted-foreground">
-        New here? <Link to="/auth" search={{ mode: "signup" }} className="text-primary font-medium hover:underline">Create an account</Link>
+        New here? <Link to="/auth" search={{ mode: "signup", next }} className="text-primary font-medium hover:underline">Create an account</Link>
       </p>
     </form>
   );
 }
 
-function SignupForm({ busy, setBusy, show, setShow, onSuccess }: { busy: boolean; setBusy: (b: boolean) => void; show: boolean; setShow: (b: boolean) => void; onSuccess: () => void }) {
+function SignupForm({ busy, setBusy, show, setShow, next, onSuccess }: { busy: boolean; setBusy: (b: boolean) => void; show: boolean; setShow: (b: boolean) => void; next?: string; onSuccess: () => void }) {
   const [data, setData] = useState({
     full_name: "", email: "", password: "", mobile: "", grade: "Class 10",
     stream: "", role: "student" as "student" | "parent" | "teacher" | "counselor",
@@ -194,7 +209,7 @@ function SignupForm({ busy, setBusy, show, setShow, onSuccess }: { busy: boolean
       email: data.email,
       password: data.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}${next ?? "/dashboard"}`,
         data: {
           full_name: data.full_name,
           mobile: data.mobile,
@@ -258,7 +273,7 @@ function SignupForm({ busy, setBusy, show, setShow, onSuccess }: { busy: boolean
         {busy && <Loader2 className="h-4 w-4 animate-spin" />} Create account
       </button>
       <p className="text-sm text-center text-muted-foreground">
-        Already a member? <Link to="/auth" search={{ mode: "login" }} className="text-primary font-medium hover:underline">Sign in</Link>
+        Already a member? <Link to="/auth" search={{ mode: "login", next }} className="text-primary font-medium hover:underline">Sign in</Link>
       </p>
     </form>
   );
