@@ -25,6 +25,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StreamsSlugRouteImport } from './routes/streams.$slug'
+import { Route as SkillsSlugRouteImport } from './routes/skills.$slug'
 import { Route as ScholarshipsSlugRouteImport } from './routes/scholarships.$slug'
 import { Route as CollegesSlugRouteImport } from './routes/colleges.$slug'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
@@ -112,6 +113,11 @@ const StreamsSlugRoute = StreamsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => StreamsRoute,
 } as any)
+const SkillsSlugRoute = SkillsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => SkillsRoute,
+} as any)
 const ScholarshipsSlugRoute = ScholarshipsSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -160,7 +166,7 @@ export interface FileRoutesByFullPath {
   '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/skills': typeof SkillsRoute
+  '/skills': typeof SkillsRouteWithChildren
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/careers/$slug': typeof CareersSlugRoute
   '/colleges/$slug': typeof CollegesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
+  '/skills/$slug': typeof SkillsSlugRoute
   '/streams/$slug': typeof StreamsSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
@@ -184,7 +191,7 @@ export interface FileRoutesByTo {
   '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/skills': typeof SkillsRoute
+  '/skills': typeof SkillsRouteWithChildren
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -193,6 +200,7 @@ export interface FileRoutesByTo {
   '/careers/$slug': typeof CareersSlugRoute
   '/colleges/$slug': typeof CollegesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
+  '/skills/$slug': typeof SkillsSlugRoute
   '/streams/$slug': typeof StreamsSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
@@ -210,7 +218,7 @@ export interface FileRoutesById {
   '/roadmap': typeof RoadmapRoute
   '/scholarships': typeof ScholarshipsRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/skills': typeof SkillsRoute
+  '/skills': typeof SkillsRouteWithChildren
   '/streams': typeof StreamsRouteWithChildren
   '/success-stories': typeof SuccessStoriesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   '/careers/$slug': typeof CareersSlugRoute
   '/colleges/$slug': typeof CollegesSlugRoute
   '/scholarships/$slug': typeof ScholarshipsSlugRoute
+  '/skills/$slug': typeof SkillsSlugRoute
   '/streams/$slug': typeof StreamsSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
     | '/careers/$slug'
     | '/colleges/$slug'
     | '/scholarships/$slug'
+    | '/skills/$slug'
     | '/streams/$slug'
     | '/.lovable/oauth/consent'
   fileRoutesByTo: FileRoutesByTo
@@ -269,6 +279,7 @@ export interface FileRouteTypes {
     | '/careers/$slug'
     | '/colleges/$slug'
     | '/scholarships/$slug'
+    | '/skills/$slug'
     | '/streams/$slug'
     | '/.lovable/oauth/consent'
   id:
@@ -294,6 +305,7 @@ export interface FileRouteTypes {
     | '/careers/$slug'
     | '/colleges/$slug'
     | '/scholarships/$slug'
+    | '/skills/$slug'
     | '/streams/$slug'
     | '/.lovable/oauth/consent'
   fileRoutesById: FileRoutesById
@@ -311,7 +323,7 @@ export interface RootRouteChildren {
   RoadmapRoute: typeof RoadmapRoute
   ScholarshipsRoute: typeof ScholarshipsRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SkillsRoute: typeof SkillsRoute
+  SkillsRoute: typeof SkillsRouteWithChildren
   StreamsRoute: typeof StreamsRouteWithChildren
   SuccessStoriesRoute: typeof SuccessStoriesRoute
   ApiChatRoute: typeof ApiChatRoute
@@ -433,6 +445,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StreamsSlugRouteImport
       parentRoute: typeof StreamsRoute
     }
+    '/skills/$slug': {
+      id: '/skills/$slug'
+      path: '/$slug'
+      fullPath: '/skills/$slug'
+      preLoaderRoute: typeof SkillsSlugRouteImport
+      parentRoute: typeof SkillsRoute
+    }
     '/scholarships/$slug': {
       id: '/scholarships/$slug'
       path: '/$slug'
@@ -531,6 +550,17 @@ const ScholarshipsRouteWithChildren = ScholarshipsRoute._addFileChildren(
   ScholarshipsRouteChildren,
 )
 
+interface SkillsRouteChildren {
+  SkillsSlugRoute: typeof SkillsSlugRoute
+}
+
+const SkillsRouteChildren: SkillsRouteChildren = {
+  SkillsSlugRoute: SkillsSlugRoute,
+}
+
+const SkillsRouteWithChildren =
+  SkillsRoute._addFileChildren(SkillsRouteChildren)
+
 interface StreamsRouteChildren {
   StreamsSlugRoute: typeof StreamsSlugRoute
 }
@@ -555,7 +585,7 @@ const rootRouteChildren: RootRouteChildren = {
   RoadmapRoute: RoadmapRoute,
   ScholarshipsRoute: ScholarshipsRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  SkillsRoute: SkillsRoute,
+  SkillsRoute: SkillsRouteWithChildren,
   StreamsRoute: StreamsRouteWithChildren,
   SuccessStoriesRoute: SuccessStoriesRoute,
   ApiChatRoute: ApiChatRoute,
